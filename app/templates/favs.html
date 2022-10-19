@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Welcome These Are My Favorite Artists!</h1>
+
+    <ol>
+        {% for n in names %}
+        <li> {{ n }}</li>
+
+        {% endfor %}
+    </ol>
+
+
+{% endblock %}
