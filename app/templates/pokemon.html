@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>{{ form.pokemon(class='form-control', placeholder='Which pokemon?') }}</p>
+        <p>{{ form.submit(class='btn btn-warning') }}</p>
+            <p>{{ invalid }}</p>
+</form>
+
+{% if pokemon %}
+
+  <div class="card" style="width: 18rem;">
+    <img src="{{pokemon['sprite']}}" class="card-img-top" alt="pokemon">
+    <div class="card-body">
+      <h5 class="card-title">{{pokemon['name'].upper()}}</h5>
+      <p class="card-text">Pokemon Ability: {{pokemon['poke_ability']}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">HP: {{pokemon['base_hp']}} </li>
+      <li class="list-group-item">ATT: {{pokemon['base_att']}}</li>
+      <li class="list-group-item">DEF: {{pokemon['base_def']}}</li>
+    </ul>
+
+  </div>
+{% endif %}
+{% if not pokemon %}
+
+
+{% endif %}
+
+{% endblock %}
