@@ -15,7 +15,6 @@ def PokeFinder(pokemon):
             'base_att': poke_attributes['stats'][1]['base_stat'],
             'base_def': poke_attributes['stats'][2]['base_stat'],
             'sprite': poke_attributes['sprites']['front_default']
-        }
-        
+        }        
         return poke_dict
     return "Error. That is not a POKEMON!"

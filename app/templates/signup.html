@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h1>Sign-up here to start looking up pokemon!</h1>
+
+<form method="POST">
+        {{ s.hidden_tag() }}
+
+        {{ s.username(class="form-control", placeholder= "Username")}}
+        {{ s.email(class="form-control", placeholder= "Email")}}
+        {{ s.password(class="form-control", placeholder= "Password")}}
+        {{ s.confirmpassword(class="form-control", placeholder= "Confirm Password")}}
+        {{ s.submit(class='btn btn-warning')}}
+</form>
+
+
+
+{% endblock %}
