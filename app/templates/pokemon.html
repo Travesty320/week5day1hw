@@ -23,9 +23,9 @@
       <li class="list-group-item">ATT: {{pokemon['base_att']}}</li>
       <li class="list-group-item">DEF: {{pokemon['base_def']}}</li>
       {% if current_user.is_authenticated %}
-      <form method="POST" action="{{ url_for('Pokemon', id=pokemon.id) }}">
+      <form method="POST" action="{{ url_for('catchPokemon', id=pokemon.id) }}">
         <input type="hidden" name="name-catch" value="{{pokemon.poke_name.title()}}" />
-        <input id="catch-btn-warning" type="submit" value="catch" name="catch-btn"/>
+        <input id="catch-btn" type="submit" value="catch" name="catch-btn"/>
       </form>
     </ul>
       {% endif %} 

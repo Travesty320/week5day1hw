@@ -3,7 +3,8 @@ from flask import render_template, url_for, redirect, request, flash
 from app import app
 from app.forms import Login, PokemonForm, SignUp, CreateRoster
 from app.pokefinder import *
-from app.models import Pokemon, User, db
+from app.models import Pokemon, User, db, pokedex
+
 from werkzeug.security import check_password_hash
 from flask_login import login_user, logout_user, current_user, login_required
 
@@ -79,10 +80,10 @@ def checkPokemon():
 
 @app.route('/choosepokemon/catch/<id>', methods=["POST"])
 @login_required
-def catchPokemon(id):
-    pokemon = Pokemon.query.get(id)
+def catchPokemon(poke_ql):
+    pokemon = Pokemon.query.get(poke_ql)
     current_user.catch(pokemon)
-    return redirect('pokemon.html')
+    return redirect('caughtPokemon')
 
 @app.route('/team', methods=["GET"])
 @login_required
@@ -104,7 +105,33 @@ def pokemon():
     
     
     return render_template('pokemon.html', names=users)
+@app.route('/team', methods = ["GET", "POST"])
+@login_required
+def genRoster():
+    form = CreateRoster()
+    print(form)
+    print(request.method)
+    if request.method == "POST":
+        print("POST")
+        if form.validate():
+            print('valid')
+            pokemon1 = form.pokemon1.data
+            pokemon2 = form.pokemon2.data
+            pokemon3 = form.pokemon3.data
+            pokemon4 = form.pokemon4.data
+            pokemon5 = form.pokemon5.data
+            pokemon6 = form.pokemon6.data
 
+            roster = pokedex(pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon6, current_user)
+
+            db.session.add(roster)
+            db.session.commit()
+
+            flash('Saved to Roster', 'success')
+        
+        else:
+            flash("Not saved to Roster", 'error')
+    return render_template('createRoster', form=form)
 
 
         
