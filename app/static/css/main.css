@@ -1,0 +1,33 @@
+.parent {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: fit-content;
+    display: block;
+}
+
+.image1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-size: cover;
+}
+.navbar-custom {
+    background-color: red; 
+}
+.container1{
+    position: absolute;
+    text-align: center;
+    margin-left: 225px;
+    color: white;
+}
+.home1 {
+    color: black;
+}
+.which1 {
+    width: 250px;
+    margin-left: 500px;
+    margin-top: 50px;
+}

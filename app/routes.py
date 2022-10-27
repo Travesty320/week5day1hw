@@ -1,28 +1,17 @@
-from flask import render_template, url_for, redirect, request
+import re
+from flask import render_template, url_for, redirect, request, flash
 from app import app
-from app.forms import Login, PokemonForm, SignUp
+from app.forms import Login, PokemonForm, SignUp, CreateRoster
 from app.pokefinder import *
-from app.models import User
+from app.models import Pokemon, User, db
 from werkzeug.security import check_password_hash
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 @app.route('/')
 def realHomePage():
     return render_template('index.html')
 
-@app.route('/choosepokemon', methods = ['Get', 'Post'])
-def Pokemon():
-    form = PokemonForm()
-    print(form)
-    if form.validate_on_submit():
-        pokemon = PokeFinder(form.pokemon.data)
-        if isinstance(pokemon, str):
-            return 'This is not a valid Pokemon'          
-        else:
-            return render_template('pokemon.html', pokemon = pokemon, form = form)
-    # elif not pokemon:
-    #         redirect(url_for('PokeFinder'))
-    return render_template('pokemon.html', title = 'PokeFinder', form = form)
+
 
 @app.route('/signup', methods = ["GET", "POST"])
 def signMeUp():
@@ -53,9 +42,9 @@ def logMeIn():
             user = User.query.filter_by(username=username).first()
             if user:
                 if check_password_hash(user.password, password):
-                    print('succesfully logged in')
+                    print('successfully logged in')
                     login_user(user)
-                    return redirect(url_for('homePage'))
+                    return redirect(url_for('realHomePage'))
                 else:
                     print('incorrect password')
 
@@ -67,3 +56,55 @@ def logMeIn():
 def logMeOut():
     logout_user()
     return redirect(url_for('logMeIn'))
+
+
+@app.route('/choosepokemon', methods = ['Get', 'Post'])
+def checkPokemon():
+    form = PokemonForm()
+    poke_dict = {}
+    if request.method == "POST":
+        pname= form.pokemon.data 
+        pokemon = PokeFinder(form.pokemon.data)
+        poke_q = Pokemon.query.filter(Pokemon.poke_name==pname).first()
+        print(poke_q)
+        if poke_q:
+            pass
+        else:
+            print(pokemon)
+            poke_ql = Pokemon(pokemon['poke_name'],pokemon['base_hp'], pokemon['base_att'], pokemon['base_def'], pokemon['sprite'])
+            poke_ql.saveToDB()
+        
+        return render_template('pokemon.html', form = form, pokemon=pokemon)
+    return render_template('pokemon.html', title = 'PokeFinder', form = form, pokemon=poke_dict)
+
+@app.route('/choosepokemon/catch/<id>', methods=["POST"])
+@login_required
+def catchPokemon(id):
+    pokemon = Pokemon.query.get(id)
+    current_user.catch(pokemon)
+    return redirect('pokemon.html')
+
+@app.route('/team', methods=["GET"])
+@login_required
+def caughtPokemon():
+    pokemon = current_user.caught.all()
+    return render_template('team.html', pokemon=pokemon)
+
+@app.route('/choosepokemon')
+def pokemon():
+    users = User.query.all()
+    caught = []
+    caught_set = set()
+    if current_user.is_authenticated:
+        caught = current_user.caughtPokemon.all()
+        caught_set = {c.id for c in caught}
+    for u in users:
+        if u.id in caught_set:
+            u.flag=True
+    
+    
+    return render_template('pokemon.html', names=users)
+
+
+
+        

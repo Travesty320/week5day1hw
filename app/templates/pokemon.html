@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-  <form action="" method="post" novalidate>
+  
+  <form class="which1" action="" method="post" novalidate>
     <div class="col mx-auto w-30">
     {{ form.hidden_tag() }}
     <p>{{ form.pokemon(class='form-control', placeholder='Which pokemon?') }}</p>
@@ -15,15 +15,20 @@
   <div class="card mx-auto" style="width: 18rem;">
     <img src="{{pokemon['sprite']}}" class="card-img-top" alt="pokemon">
     <div class="card-body">
-      <h5 class="card-title, text-center">{{pokemon['name'].upper()}}</h5>
+      <h5 class="card-title, text-center">{{pokemon['poke_name'].upper()}}</h5>
       <p class="card-text, text-center">Pokemon Ability: {{pokemon['poke_ability'].title()}}</p>
     </div>
     <ul class="list-group list-group-flush">
       <li class="list-group-item">HP: {{pokemon['base_hp']}} </li>
       <li class="list-group-item">ATT: {{pokemon['base_att']}}</li>
       <li class="list-group-item">DEF: {{pokemon['base_def']}}</li>
+      {% if current_user.is_authenticated %}
+      <form method="POST" action="{{ url_for('Pokemon', id=pokemon.id) }}">
+        <input type="hidden" name="name-catch" value="{{pokemon.poke_name.title()}}" />
+        <input id="catch-btn-warning" type="submit" value="catch" name="catch-btn"/>
+      </form>
     </ul>
-
+      {% endif %} 
   </div>
 {% endif %}
 {% if not pokemon %}

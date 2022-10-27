@@ -9,7 +9,7 @@ def PokeFinder(pokemon):
         poke_dict = {}
         poke_attributes = data
         poke_dict= {
-            'name': poke_attributes['name'],
+            'poke_name': poke_attributes['name'],
             'poke_ability': poke_attributes['abilities'][0]['ability']['name'],
             'base_hp': poke_attributes['stats'][0]['base_stat'],
             'base_att': poke_attributes['stats'][1]['base_stat'],
