@@ -78,17 +78,18 @@ def checkPokemon():
         return render_template('pokemon.html', form = form, pokemon=pokemon)
     return render_template('pokemon.html', title = 'PokeFinder', form = form, pokemon=poke_dict)
 
-@app.route('/choosepokemon/catch/<id>', methods=["POST"])
+@app.route('/choosepokemon/catch/<poke_name>', methods=["POST"])
 @login_required
-def catchPokemon(poke_ql):
-    pokemon = Pokemon.query.get(poke_ql)
+def catchPokemon(poke_name):
+    pokemon = Pokemon.query.filter(Pokemon.poke_name==poke_name).first()
     current_user.catch(pokemon)
-    return redirect('caughtPokemon')
+    return redirect(url_for('caughtPokemon', poke_name=poke_name))
 
 @app.route('/team', methods=["GET"])
 @login_required
 def caughtPokemon():
     pokemon = current_user.caught.all()
+    print(pokemon)
     return render_template('team.html', pokemon=pokemon)
 
 @app.route('/choosepokemon')
